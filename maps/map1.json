@@ -1,0 +1,19 @@
+{
+    "noOfObjects": 2,
+    "Objects":[
+        {
+            "x": 500,
+            "y": 300,
+            "length": 300,
+            "breadth": 100,
+            "textureName": "wall.png"
+        },
+        {
+            "x": 1000,
+            "y": 600,
+            "length": 200,
+            "breadth": 300,
+            "textureName": "wall.png"
+        }
+    ]
+}

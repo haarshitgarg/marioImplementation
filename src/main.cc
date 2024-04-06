@@ -1,14 +1,23 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Window/Event.hpp"
 #include "backgroundObject.hpp"
+#include "gameWorld.hpp"
 #include "commonObjects.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 #define goBrrr "***************************************************"
 
-void gameEngine(sf::RenderWindow& window, Background& bkg) {
+bool _showWorld_ = false;
+
+void gameEngine(sf::RenderWindow& window, Background& bkg, World& world) {
     window.draw(bkg.getBackground());
+    if(_showWorld_) {
+        std::vector<GameObject> gameObject = world.GetGameObjects();
+        for(int i = 0; i<gameObject.size(); i++) {
+            window.draw(world.GetGameObjects()[i].GetSprite());
+        }
+    }
 }
 
 void GameBackgroundAnimation(Background& bkg) {
@@ -33,6 +42,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_X,WINDOW_Y), "SUPER MARIO");
     
     Background background;
+    World world;
 
     while(window.isOpen()) {
         sf::Event event;
@@ -45,9 +55,12 @@ int main() {
             else if(event.type == sf::Event::MouseButtonPressed) {
                 GameBackgroundAnimation(background);
             }
+            else if(event.type == sf::Event::KeyPressed) {
+                _showWorld_ = true;
+            }
         }
         window.clear(sf::Color::Black);
-        gameEngine(window, background);
+        gameEngine(window, background, world);
         window.display();
     }
     return 0;

@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 
-#define ROOT_DIR "/Users/harshitgarg/CPP-projects/marioImplementation/assets/"
 
 Background::Background() {
     this->loc_.x = 0;
@@ -18,7 +17,7 @@ Background::Background() {
     sf::Texture texture;
     std::string image_path = "superMarioBackground.png";
 
-    texture_path = ROOT_DIR + image_path;
+    texture_path = ROOT_ASSET_DIR + image_path;
     if(!texture.loadFromFile(texture_path)) {
         std::cerr<<"Cannot load the file: "<<texture_path<<std::endl;
     }

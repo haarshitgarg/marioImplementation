@@ -21,5 +21,6 @@ add_executable(superMario ${SOURCES})
 #add_executable(superMario_test ${TEST_SOURCES})
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-target_link_libraries(superMario sfml-graphics sfml-window sfml-system)
+find_package(nlohmann_json REQUIRED)
+target_link_libraries(superMario sfml-graphics sfml-window sfml-system nlohmann_json::nlohmann_json)
 #target_link_libraries(superMario_test sfml-graphics sfml-window sfml-system)
