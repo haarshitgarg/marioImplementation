@@ -16,12 +16,12 @@ location GameObject::GetLocation() {
     return loc_;
 }
 
-sf::Sprite GameObject::GetSprite() {
+sf::Sprite GameObject::GetSprite(location windowLocation) {
     sf::Sprite sprite;
     sprite.setTexture(texture_);
 
     sprite.setTextureRect(sf::IntRect(0, 0, size_.length, size_.breadth));
-    sprite.setPosition(loc_.x, loc_.y);
+    sprite.setPosition(loc_.x - windowLocation.x, loc_.y - windowLocation.y);
 
     return sprite;
 }
@@ -33,3 +33,10 @@ void GameObject::loadTexture() {
     }
     texture_.setRepeated(true);
 }
+
+
+
+
+
+
+

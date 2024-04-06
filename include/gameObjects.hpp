@@ -8,7 +8,8 @@ class GameObject {
         GameObject(location loc, std::string textureName, ObjectSize size);
         ~GameObject();
         location GetLocation();
-        sf::Sprite GetSprite();
+        void SetRelativeLocation();
+        sf::Sprite GetSprite(location windoLocation);
 
     private:
         location loc_;
