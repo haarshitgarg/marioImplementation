@@ -2,6 +2,8 @@
 #include "SFML/Window/Event.hpp"
 #include "backgroundObject.hpp"
 #include "gameWorld.hpp"
+#include "marioObject.hpp"
+#include "marioPhysics.hpp"
 #include "commonObjects.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -11,13 +13,20 @@
 bool _showWorld_ = false;
 location _windowLocation_;
 
-void gameEngine(sf::RenderWindow& window, Background& bkg, World& world) {
+void gameEngine(sf::RenderWindow& window, Background& bkg, World& world, MarioObject& mario, MarioPhysics& marioPhysics) {
     window.draw(bkg.getBackground());
     if(_showWorld_) {
+
+        marioPhysics.setMarioPosition(mario);
         std::vector<GameObject> gameObject = world.GetGameObjects();
         for(int i = 0; i<gameObject.size(); i++) {
             window.draw(world.GetGameObjects()[i].GetSprite(_windowLocation_));
         }
+
+        window.draw(mario.GetSprite());
+    }
+    else {
+        mario.ResetTime();
     }
 }
 
@@ -47,6 +56,8 @@ int main() {
     
     Background background;
     World world;
+    MarioPhysics marioPhysics;
+    MarioObject mario;
 
     while(window.isOpen()) {
         sf::Event event;
@@ -57,14 +68,26 @@ int main() {
                 window.close();
             }
             else if(event.type == sf::Event::KeyPressed) {
-                GameBackgroundAnimation(background);
+                if(event.key.code == sf::Keyboard::D) {
+                    GameBackgroundAnimation(background);
+                    mario.SetXVelocity(300);
+                }
+                else if(event.key.code == sf::Keyboard::Space){
+                    mario.SetYVelocity(-500);}
             }
+            else if(event.type == sf::Event::KeyReleased) {
+            
+                if(event.key.code == sf::Keyboard::D) {
+                    mario.SetXVelocity(0);
+                }
+            }
+
             else if(event.type == sf::Event::MouseButtonPressed) {
                 _showWorld_ = true;
             }
         }
         window.clear(sf::Color::Black);
-        gameEngine(window, background, world);
+        gameEngine(window, background, world, mario, marioPhysics);
         window.display();
     }
     return 0;
