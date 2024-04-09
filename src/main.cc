@@ -13,8 +13,28 @@
 bool _showWorld_ = false;
 location _windowLocation_;
 
+void GameBackgroundAnimation(Background& bkg) {
+    sf::Vector2u textureSize = bkg.getCurrentBackgroundSize();
+    location loc = bkg.getLocation();
+    double dt = bkg.deltaTime();
+    Velocity2D vel = bkg.getVelocity();
+    if(dt > 100 && vel.x != 0) {
+        if(loc.x + 1 + WINDOW_X/3 >= textureSize.x) {
+            loc.x = (2*textureSize.x/3) - WINDOW_X/3 + 10;
+        }
+        else {
+            loc.x = loc.x + 1;
+        }
+        _windowLocation_.x += 30;
+        bkg.setLocation(loc);
+        bkg.resetCurrentTime();
+    }
+
+}
+
 void gameEngine(sf::RenderWindow& window, Background& bkg, World& world, MarioObject& mario, MarioPhysics& marioPhysics) {
     window.draw(bkg.getBackground());
+    GameBackgroundAnimation(bkg);
     if(_showWorld_) {
 
         marioPhysics.setMarioPosition(mario);
@@ -30,20 +50,6 @@ void gameEngine(sf::RenderWindow& window, Background& bkg, World& world, MarioOb
     }
 }
 
-void GameBackgroundAnimation(Background& bkg) {
-    sf::Vector2u textureSize = bkg.getCurrentBackgroundSize();
-    location loc = bkg.getLocation();
-
-    if(loc.x + 1 + WINDOW_X/3 >= textureSize.x) {
-        loc.x = (2*textureSize.x/3) - WINDOW_X/3 + 10;
-    }
-    else {
-        loc.x = loc.x + 1;
-    }
-    _windowLocation_.x += 30;
-    bkg.setLocation(loc);
-
-}
 
 int main() {
     std::cout<<goBrrr<<std::endl;
@@ -69,7 +75,7 @@ int main() {
             }
             else if(event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::D) {
-                    GameBackgroundAnimation(background);
+                    background.setXVelocity(10);
                     mario.SetXVelocity(300);
                 }
                 else if(event.key.code == sf::Keyboard::Space){
@@ -78,6 +84,7 @@ int main() {
             else if(event.type == sf::Event::KeyReleased) {
             
                 if(event.key.code == sf::Keyboard::D) {
+                    background.setXVelocity(0);
                     mario.SetXVelocity(0);
                 }
             }

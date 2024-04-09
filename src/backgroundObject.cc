@@ -4,12 +4,16 @@
 #include "SFML/System/Vector2.hpp"
 #include "commonObjects.hpp"
 #include <iostream>
+#include <ratio>
 #include <string>
 
 
 Background::Background() {
     this->loc_.x = 0;
     this->loc_.y = 0;
+    
+    this->vel_.x = 0;
+    this->vel_.y = 0;
 
     this->current_background_ = BackgroundType::GAME1;
 
@@ -23,6 +27,8 @@ Background::Background() {
     }
     this->background_textures_ = std::vector<sf::Texture>(5);
     this->background_textures_[static_cast<int>(current_background_)] = texture;
+    
+    current_time_ = std::chrono::high_resolution_clock::now();
 }
 
 
@@ -50,6 +56,18 @@ bool Background::setLocation(location loc) {
     return true;
 }
 
+void Background::setXVelocity(int x) {
+    vel_.x = x;
+}
+
+void Background::setYVelocity(int y) {
+    vel_.y = y;
+}
+
+void Background::setVelocity(Velocity2D vel) {
+    vel_ = vel;
+}
+
 sf::Vector2u Background::getCurrentBackgroundSize() {
     sf::Vector2u vec;
 
@@ -59,6 +77,22 @@ sf::Vector2u Background::getCurrentBackgroundSize() {
 
 location Background::getLocation() {
     return loc_;
+}
+
+Velocity2D Background::getVelocity() {
+    return vel_;
+}
+
+void Background::resetCurrentTime() {
+    current_time_ = std::chrono::high_resolution_clock::now();
+}
+
+double Background::deltaTime() {
+    double dt;
+
+    dt = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - current_time_).count();
+
+    return dt;
 }
 
 
