@@ -11,6 +11,7 @@ set(SFML_INCLUDE_PATH /opt/homebrew/Cellar/sfml/2.5.1_2/include)
 # Include directories
 include_directories(include)
 include_directories(/opt/homebrew/Cellar/sfml/2.5.1_2/include)
+include_directories(/opt/homebrew/Cellar/opencv/4.9.0_6/include)
 
 # Source files
 file(GLOB SOURCES "src/*.cc")
@@ -22,5 +23,6 @@ add_executable(superMario ${SOURCES})
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 find_package(nlohmann_json REQUIRED)
-target_link_libraries(superMario sfml-graphics sfml-window sfml-system nlohmann_json::nlohmann_json)
+find_package(OpenCV REQUIRED)
+target_link_libraries(superMario sfml-graphics sfml-window sfml-system nlohmann_json::nlohmann_json ${OpenCV_LIBS})
 #target_link_libraries(superMario_test sfml-graphics sfml-window sfml-system)

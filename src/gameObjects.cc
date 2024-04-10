@@ -12,7 +12,7 @@ GameObject::GameObject(location loc, std::string textureName, ObjectSize size) {
 GameObject::~GameObject() {
 }
 
-location GameObject::GetLocation() {
+location GameObject::GetLocation() const {
     return loc_;
 }
 
@@ -24,6 +24,10 @@ sf::Sprite GameObject::GetSprite(location windowLocation) {
     sprite.setPosition(loc_.x - windowLocation.x, loc_.y - windowLocation.y);
 
     return sprite;
+}
+
+ObjectSize GameObject::GetObjectSize() const {
+    return this->size_;
 }
 
 void GameObject::loadTexture() {

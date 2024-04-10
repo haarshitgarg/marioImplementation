@@ -22,6 +22,8 @@ class MarioObject {
         void SetXVelocity(float x);
         void SetYVelocity(float y);
 
+        ObjectSize GetSize();
+
         double ElapsedTime();
         void ResetTime();
 

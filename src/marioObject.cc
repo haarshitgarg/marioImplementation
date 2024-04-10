@@ -6,8 +6,8 @@
 MarioObject::MarioObject() {
     loc_.x = 50;
     loc_.y = 200;
-    size_.length = 50;
-    size_.breadth = 50;
+    size_.length = 150;
+    size_.breadth = 200;
 
     velocity_.x = 0;
     velocity_.y = 0;
@@ -61,6 +61,10 @@ void MarioObject::SetXVelocity(float x) {
 
 void MarioObject::SetYVelocity(float y) {
     velocity_.y = y;
+}
+
+ObjectSize MarioObject::GetSize() {
+    return size_;
 }
 
 double MarioObject::ElapsedTime() {

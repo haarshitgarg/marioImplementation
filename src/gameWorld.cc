@@ -40,7 +40,7 @@ World::~World() {
     std::cout<<"Destryoing the WORLD HA HA HA HA HA"<<std::endl;
 }
 
-std::vector<GameObject>& World::GetGameObjects() {
+std::vector<GameObject> World::GetGameObjects() {
     return list_of_objects_;
 }
 

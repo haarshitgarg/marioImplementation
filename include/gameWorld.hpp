@@ -6,7 +6,7 @@ class World {
         World();
         ~World();
 
-        std::vector<GameObject>& GetGameObjects();
+        std::vector<GameObject> GetGameObjects();
  
     private:
         std::vector<GameObject> list_of_objects_;
