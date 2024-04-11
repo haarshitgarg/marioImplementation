@@ -10,14 +10,16 @@ class GameObject {
     public:
         GameObject(location loc, std::string textureName, ObjectSize size);
         ~GameObject();
-        location GetLocation() const;
-        void SetRelativeLocation();
-        sf::Sprite GetSprite(location windoLocation);
 
+        location GetLocation() const;
+        void SetRelativeLocation(int x);
+
+        sf::Sprite GetSprite() const;
         ObjectSize GetObjectSize() const;
 
     private:
         location loc_;
+
         std::string textureName_;
         ObjectSize size_;
         sf::Texture texture_;

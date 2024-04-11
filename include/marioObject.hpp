@@ -6,33 +6,42 @@
 #include "commonObjects.hpp"
 #include <chrono>
 
+#define MARIO_INITIAL_X 1000
+#define MARIO_INITIAL_Y 200
+#define MARIO_LENGTH 150
+#define MARIO_BREADTH 200
+#define MARIO_TEXTURE_NAME "wall.png"
+#define MIN_MARIO_VELOCITY -800
+
 class MarioObject {
 
     public:
         MarioObject();
         ~MarioObject();
-        location GetLocation();
+
+        sf::Sprite GetSprite() const;
+        ObjectSize GetSize() const;
+
+        location GetLocation() const;
         void SetLocation(location loc);
-        void SetRelativeLocation();
-        sf::Sprite GetSprite();
 
 
-        Velocity2D GetVelocity();
+
+        Velocity2D GetVelocity() const;
         void SetVelocity(Velocity2D vel);
         void SetXVelocity(float x);
         void SetYVelocity(float y);
 
-        ObjectSize GetSize();
 
-        double ElapsedTime();
+        double DeltaTime() const;
         void ResetTime();
 
     private:
-        location loc_;
         ObjectSize size_;
         sf::Texture texture_;
         sf::Sprite sprite_;
 
+        location loc_;
         Velocity2D velocity_;
 
         std::chrono::time_point<std::chrono::high_resolution_clock> current_time_;

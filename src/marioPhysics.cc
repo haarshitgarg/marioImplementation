@@ -1,13 +1,15 @@
+#include <algorithm>
+#include <iostream>
 #include <opencv2/opencv.hpp>
 #include "marioPhysics.hpp"
 #include "marioObject.hpp"
 #include "commonObjects.hpp"
-#include <iostream>
 #include <vector>
 
 // Try a way to use the Sparce maritces implementation you have
-MarioPhysics::MarioPhysics(const std::vector<GameObject> objects) {
+MarioPhysics::MarioPhysics() {
 
+    // Initialising the matrix to zero
     int count = 0;
     for(int i = 0; i<WINDOW_X; i++) {
         std::vector<int> temp;
@@ -18,7 +20,7 @@ MarioPhysics::MarioPhysics(const std::vector<GameObject> objects) {
         matrix.push_back(temp);
     }
 
-    list_of_objects = objects;
+    std::vector<GameObject> list_of_objects = world.GetGameObjects();
     for(int i = 0; i<list_of_objects.size(); i++) {
         if(list_of_objects[i].GetLocation().x <WINDOW_X) {
 
@@ -34,41 +36,24 @@ MarioPhysics::MarioPhysics(const std::vector<GameObject> objects) {
 }
 
 MarioPhysics::~MarioPhysics() {
+    std::cout<<"Ending the Physics"<<std::endl;
 
 }
 
-void MarioPhysics::setMarioPosition(MarioObject& mario) {
+void MarioPhysics::HandleActions(MarioObject& mario, Actions action) {
+    switch (action) {
+        case Actions::UP :
+            {
+                mario.SetYVelocity(-500);
+            }
+        default:
+            {
 
-    double dt = mario.ElapsedTime();
-    if(dt < 10) {
-        return;
+            }
+    
     }
-
-    mario.ResetTime();
-    dt = dt/1000;
-
-    float accel = gravityAccel; 
-
-    Velocity2D currentVel = mario.GetVelocity();
-    Velocity2D delta_vel;
-
-    delta_vel.y = accel*dt;
-    currentVel.y = currentVel.y + delta_vel.y;
-
-
-    location currentLoc = mario.GetLocation();
-    currentLoc.y = currentLoc.y + currentVel.y * dt;
-    currentLoc.x = currentLoc.x + currentVel.x * dt;
-    checkMatrix(mario, currentLoc);
-    if(currentLoc.y >= 850) {
-        currentLoc.y = 849;
-    }
-    mario.SetVelocity(currentVel);
-    mario.SetLocation(currentLoc);
 }
 
-void MarioPhysics::UpdateMatrix(const std::vector<GameObject>& gameObject, const location& windowLocation) {
-}
 
 cv::Mat MarioPhysics::PrintMatrix() { 
     cv::Mat image(WINDOW_Y, WINDOW_X, CV_8UC1);
@@ -86,35 +71,118 @@ cv::Mat MarioPhysics::PrintMatrix() {
     return image;
 }
 
-void MarioPhysics::checkMatrix(MarioObject& mario, location& loc) {
+void MarioPhysics::SetPosition(MarioObject& mario, World& world) {
+    
+    Velocity2D vel = mario.GetVelocity();
+    double dt = mario.DeltaTime();
+    if(dt > 50) {
+        mario.ResetTime();
+        dt = dt/1000;
+        vel.y += gravityAccel*dt;
+        location loc = mario.GetLocation();
 
-    int start = -1;
-    int end = -1;
-    for(int i = 0; i<mario.GetSize().length; i++) {
-        if(matrix[loc.x + i][loc.y] == 1) {
-            if(start == -1) {
-                start = i;
-            }
-            else {
-                end = i;
-            }
-        }
-    }
-    int delta = end - start;
-    if(delta>0) {
-        std::cout<<"Delta is : "<<delta<<std::endl;
-        if(start>mario.GetSize().length/2) {
-            loc.x -= delta+10;
-        }
-        else if(end<mario.GetSize().length/2) {
-            loc.x += delta+10;
-        }
+        int dx = vel.x*dt;
+        int dy = vel.y*dt;
+        loc.y += dy;
+        loc.x += dx;
+
+        UpdateLocation(mario, loc, vel);
     }
 }
 
+void MarioPhysics::UpdateLocation(MarioObject& mario, location& loc, Velocity2D& vel) {
+    std::vector<location> corners(4);
+    corners[0].x = loc.x + 30;
+    corners[0].y = loc.y + 30;
 
+    int deltaX = 0;
+    int deltaY = 0;
 
+    for(int i = 0; i<30; i++) {
+        if(matrix[corners[0].x][corners[0].y - i] == 1){
+            deltaY = std::max(deltaY, 30-i);
+        }
+        if(matrix[corners[0].x -i][corners[0].y] == 1) {
+            deltaX = std::max(deltaX, 30-i);
+        }
+    }
+    loc.x += deltaX;
+    loc.y += deltaY;
+    mario.SetLocation(loc);
+    if(deltaY != 0) {
+        vel.y = 0;
+    }
+    mario.SetVelocity(vel);
 
+    deltaX = 0;
+    deltaY = 0;
+
+    corners[1].x = loc.x + MARIO_LENGTH - 30;
+    corners[1].y = loc.y + 30;
+
+    for(int i = 0; i<30; i++) {
+        if(matrix[corners[1].x][corners[1].y - i] == 1){
+            deltaY = std::max(deltaY, 30-i);
+        }
+        if(matrix[corners[1].x + i][corners[1].y] == 1) {
+            deltaX = std::max(deltaX, 30-i);
+        }
+    }
+    
+    loc.x -= deltaX;
+    loc.y += deltaY;
+    mario.SetLocation(loc);
+    if(deltaY != 0) {
+        vel.y = 0;
+    }
+    mario.SetVelocity(vel);
+
+    deltaX = 0;
+    deltaY = 0;
+
+    corners[2].x = loc.x + 30;
+    corners[2].y = loc.y + MARIO_BREADTH - 30;
+
+    for(int i = 0; i<30; i++) {
+        if(matrix[corners[2].x][corners[2].y + i] == 1){
+            deltaY = std::max(deltaY, 30-i);
+        }
+        if(matrix[corners[2].x - i][corners[2].y] == 1) {
+            deltaX = std::max(deltaX, 30-i);
+        }
+    }
+    
+    loc.x += deltaX;
+    loc.y -= deltaY;
+    mario.SetLocation(loc);
+    if(deltaY != 0) {
+        vel.y = 0;
+    }
+    mario.SetVelocity(vel);
+
+    deltaX = 0;
+    deltaY = 0;
+
+    corners[3].x = loc.x + MARIO_LENGTH - 30;
+    corners[3].y = loc.y + MARIO_BREADTH - 30;
+
+    for(int i = 0; i<30; i++) {
+        if(matrix[corners[3].x][corners[3].y + i] == 1){
+            deltaY = std::max(deltaY, 30-i);
+        }
+        if(matrix[corners[3].x + i][corners[3].y] == 1) {
+            deltaX = std::max(deltaX, 30-i);
+        }
+    }
+    
+    loc.x -= deltaX;
+    loc.y -= deltaY;
+    mario.SetLocation(loc);
+    if(deltaY != 0) {
+        vel.y = 0;
+    }
+    mario.SetVelocity(vel);
+}
 
 
 

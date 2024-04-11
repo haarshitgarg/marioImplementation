@@ -13,7 +13,6 @@
 #define goBrrr "***************************************************"
 
 bool _showWorld_ = false;
-location _windowLocation_;
 
 void GameBackgroundAnimation(Background& bkg) {
     sf::Vector2u textureSize = bkg.getCurrentBackgroundSize();
@@ -28,7 +27,6 @@ void GameBackgroundAnimation(Background& bkg) {
             else {
                 loc.x = loc.x + 1;
             }
-            _windowLocation_.x += 30;
             bkg.setLocation(loc);
             bkg.resetCurrentTime();
         }
@@ -39,7 +37,6 @@ void GameBackgroundAnimation(Background& bkg) {
             else {
                 loc.x = loc.x -1;
             }
-            _windowLocation_.x -= 30;
             bkg.setLocation(loc);
             bkg.resetCurrentTime();
         }
@@ -52,11 +49,9 @@ void gameEngine(sf::RenderWindow& window, Background& bkg, World& world, MarioOb
     GameBackgroundAnimation(bkg);
     if(_showWorld_) {
 
-        marioPhysics.setMarioPosition(mario);
         std::vector<GameObject> gameObject = world.GetGameObjects();
         for(int i = 0; i<gameObject.size(); i++) {
-            window.draw(world.GetGameObjects()[i].GetSprite(_windowLocation_));
-            marioPhysics.UpdateMatrix(world.GetGameObjects(), _windowLocation_);
+            window.draw(world.GetGameObjects()[i].GetSprite());
         }
 
         window.draw(mario.GetSprite());
@@ -72,17 +67,12 @@ int main() {
     std::cout<<"RUNNING THE SUPERR MARIO GAME"<<std::endl;
     std::cout<<goBrrr<<std::endl;
 
-    _windowLocation_.x = 0;
-    _windowLocation_.y = 0;
     sf::RenderWindow window(sf::VideoMode(WINDOW_X,WINDOW_Y), "SUPER MARIO");
     
     Background background;
     World world;
-    MarioPhysics marioPhysics(world.GetGameObjects());
-    cv::Mat image = marioPhysics.PrintMatrix();
-    cv::imshow("Marix image", image);
-    cv::waitKey(0);
     MarioObject mario;
+    MarioPhysics marioPhysics;
 
     while(window.isOpen()) {
         sf::Event event;
@@ -94,11 +84,9 @@ int main() {
             }
             else if(event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::D) {
-                    background.setXVelocity(10);
                     mario.SetXVelocity(300);
                 }
                 else if(event.key.code == sf::Keyboard::A) {
-                    background.setXVelocity(-10);
                     mario.SetXVelocity(-300);
                 }
                 else if(event.key.code == sf::Keyboard::Space){
@@ -113,7 +101,6 @@ int main() {
                 }
                 else if(event.key.code == sf::Keyboard::A) {
                     background.setXVelocity(0);
-                    mario.SetXVelocity(0);
                 }
             }
 
@@ -122,7 +109,14 @@ int main() {
             }
         }
         window.clear(sf::Color::Black);
+        if(_showWorld_) {
+            marioPhysics.SetPosition(mario, world);
+        }
+        else {
+            mario.ResetTime();
+        }
         gameEngine(window, background, world, mario, marioPhysics);
+
         window.display();
     }
     return 0;

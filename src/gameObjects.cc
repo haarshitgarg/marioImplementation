@@ -16,12 +16,16 @@ location GameObject::GetLocation() const {
     return loc_;
 }
 
-sf::Sprite GameObject::GetSprite(location windowLocation) {
+void GameObject::SetRelativeLocation(int x) {
+    loc_.x += x;
+}
+
+sf::Sprite GameObject::GetSprite() const {
     sf::Sprite sprite;
     sprite.setTexture(texture_);
 
     sprite.setTextureRect(sf::IntRect(0, 0, size_.length, size_.breadth));
-    sprite.setPosition(loc_.x - windowLocation.x, loc_.y - windowLocation.y);
+    sprite.setPosition(loc_.x, loc_.y);
 
     return sprite;
 }

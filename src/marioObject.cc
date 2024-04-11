@@ -3,11 +3,12 @@
 #include <iostream>
 #include <ratio>
 
+
 MarioObject::MarioObject() {
-    loc_.x = 50;
-    loc_.y = 200;
-    size_.length = 150;
-    size_.breadth = 200;
+    loc_.x = MARIO_INITIAL_X;
+    loc_.y = MARIO_INITIAL_Y;
+    size_.length = MARIO_LENGTH;
+    size_.breadth = MARIO_BREADTH;
 
     velocity_.x = 0;
     velocity_.y = 0;
@@ -18,17 +19,19 @@ MarioObject::MarioObject() {
 }
 
 MarioObject::~MarioObject() {
+
 }
 
-location MarioObject::GetLocation() {
-    return loc_;
+void MarioObject::loadTexture() {
+    std::string textureName = MARIO_TEXTURE_NAME;
+    textureName = ROOT_ASSET_DIR + textureName;
+    if(!texture_.loadFromFile(textureName)) {
+        std::cerr<<"Failed to load: "<<textureName<<std::endl;
+    }
+    texture_.setRepeated(true);
 }
 
-void MarioObject::SetLocation(location loc) {
-    loc_ = loc;
-}
-
-sf::Sprite MarioObject::GetSprite() {
+sf::Sprite MarioObject::GetSprite() const{
     sf::Sprite sprite;
     sprite.setTexture(texture_);
 
@@ -38,16 +41,21 @@ sf::Sprite MarioObject::GetSprite() {
     return sprite;
 }
 
-void MarioObject::loadTexture() {
-    std::string textureName = "wall.png";
-    textureName = ROOT_ASSET_DIR + textureName;
-    if(!texture_.loadFromFile(textureName)) {
-        std::cerr<<"Failed to load: "<<textureName<<std::endl;
-    }
-    texture_.setRepeated(true);
+ObjectSize MarioObject::GetSize() const {
+    return size_;
 }
 
-Velocity2D MarioObject::GetVelocity() {
+location MarioObject::GetLocation() const{
+    return loc_;
+}
+
+void MarioObject::SetLocation(location loc) {
+    loc_ = loc;
+}
+
+
+
+Velocity2D MarioObject::GetVelocity() const{
     return velocity_;
 }
 
@@ -63,12 +71,9 @@ void MarioObject::SetYVelocity(float y) {
     velocity_.y = y;
 }
 
-ObjectSize MarioObject::GetSize() {
-    return size_;
-}
 
-double MarioObject::ElapsedTime() {
-    double dt = std::chrono::duration<float , std::milli>(std::chrono::high_resolution_clock::now() - current_time_).count();
+double MarioObject::DeltaTime() const {
+    double dt = std::chrono::duration<double , std::milli>(std::chrono::high_resolution_clock::now() - current_time_).count();
     return dt;
 }
 

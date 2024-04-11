@@ -1,31 +1,38 @@
 #ifndef MARIO_PHYSICS_HPP
 #define MARIO_PHYSICS_HPP
 
-#include "commonObjects.hpp"
+#include "gameWorld.hpp"
 #include "marioObject.hpp"
-#include "gameObjects.hpp"
 #include <opencv2/core/mat.hpp>
 #include <vector>
 
 using Matrix = std::vector<std::vector<int>>;
 
+enum Actions {
+    UP = 0,
+    DOWN,
+    RIGHT,
+    LEFT,
+    JUMP
+};
+
 class MarioPhysics {
     public:
-        MarioPhysics(const std::vector<GameObject> list_of_objects);
-
+        MarioPhysics();
         ~MarioPhysics();
 
-        void setMarioPosition(MarioObject& mario);
+        void UpdateMatrix();
+        void HandleActions(MarioObject& mario, Actions action);
 
-        void UpdateMatrix(const std::vector<GameObject>& gameObject, const location& windowLocation);
-    
+        void SetPosition(MarioObject& mario, World& world);
+
         cv::Mat PrintMatrix();
     private:
         Matrix matrix;
+        World world;
+        int max_ds = 0;
 
-        std::vector<GameObject> list_of_objects;
-
-        void checkMatrix(MarioObject& mario, location& loc);
+        void UpdateLocation(MarioObject& mario, location& loc, Velocity2D& vel);
 };
 
 #endif
