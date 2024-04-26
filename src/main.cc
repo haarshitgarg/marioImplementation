@@ -83,15 +83,17 @@ int main() {
             }
             else if(event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::D) {
-                    mario.SetXVelocity(300);
+                    mario.SetXVelocity(500);
                     background.setXVelocity(20);
                 }
                 else if(event.key.code == sf::Keyboard::A) {
-                    mario.SetXVelocity(-300);
+                    mario.SetXVelocity(-500);
                     background.setXVelocity(-20);
                 }
                 else if(event.key.code == sf::Keyboard::Space){
-                    mario.SetYVelocity(-500);
+                    if(std::abs(mario.GetVelocity().y) < 50){
+                        mario.SetYVelocity(-500);
+                    }
                 }
             }
             else if(event.type == sf::Event::KeyReleased) {

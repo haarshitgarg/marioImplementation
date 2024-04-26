@@ -34,8 +34,9 @@ void MarioObject::loadTexture() {
 sf::Sprite MarioObject::GetSprite() const{
     sf::Sprite sprite;
     sprite.setTexture(texture_);
+    sprite.setScale(0.15, 0.15);
 
-    sprite.setTextureRect(sf::IntRect(0, 0, size_.length, size_.breadth));
+    //sprite.setTextureRect(sf::IntRect(0, 0, size_.length, size_.breadth));
     sprite.setPosition(loc_.x, loc_.y);
 
     return sprite;

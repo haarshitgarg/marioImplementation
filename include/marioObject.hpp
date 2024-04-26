@@ -10,7 +10,7 @@
 #define MARIO_INITIAL_Y 200
 #define MARIO_LENGTH 150
 #define MARIO_BREADTH 200
-#define MARIO_TEXTURE_NAME "wall.png"
+#define MARIO_TEXTURE_NAME "mario.png"
 #define MIN_MARIO_VELOCITY -800
 
 class MarioObject {
