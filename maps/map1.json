@@ -1,5 +1,5 @@
 {
-    "noOfObjects": 5,
+    "noOfObjects": 7,
     "Objects":[
         {
             "x": 0,
@@ -9,9 +9,23 @@
             "textureName": "wall.png"
         },
         {
+            "x": 800,
+            "y": 1000,
+            "length": 200,
+            "breadth": 200,
+            "textureName": "wall.png"
+        },
+        {
             "x": 1000,
             "y": 600,
             "length": 200,
+            "breadth": 600,
+            "textureName": "wall.png"
+        },
+        {
+            "x": 1200,
+            "y": 800,
+            "length": 2000,
             "breadth": 300,
             "textureName": "wall.png"
         },
