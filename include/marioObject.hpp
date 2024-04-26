@@ -6,7 +6,7 @@
 #include "commonObjects.hpp"
 #include <chrono>
 
-#define MARIO_INITIAL_X 1000
+#define MARIO_INITIAL_X 10
 #define MARIO_INITIAL_Y 200
 #define MARIO_LENGTH 150
 #define MARIO_BREADTH 200

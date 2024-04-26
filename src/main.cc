@@ -48,7 +48,6 @@ void gameEngine(sf::RenderWindow& window, Background& bkg, World& world, MarioOb
     window.draw(bkg.getBackground());
     GameBackgroundAnimation(bkg);
     if(_showWorld_) {
-
         std::vector<GameObject> gameObject = world.GetGameObjects();
         for(int i = 0; i<gameObject.size(); i++) {
             window.draw(world.GetGameObjects()[i].GetSprite());
@@ -69,10 +68,10 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(WINDOW_X,WINDOW_Y), "SUPER MARIO");
     
+    MarioPhysics marioPhysics;
     Background background;
     World world;
     MarioObject mario;
-    MarioPhysics marioPhysics;
 
     while(window.isOpen()) {
         sf::Event event;
@@ -85,9 +84,11 @@ int main() {
             else if(event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::D) {
                     mario.SetXVelocity(300);
+                    background.setXVelocity(20);
                 }
                 else if(event.key.code == sf::Keyboard::A) {
                     mario.SetXVelocity(-300);
+                    background.setXVelocity(-20);
                 }
                 else if(event.key.code == sf::Keyboard::Space){
                     mario.SetYVelocity(-500);
@@ -109,13 +110,13 @@ int main() {
                 _showWorld_ = true;
             }
         }
+
         window.clear(sf::Color::Black);
+
         if(_showWorld_) {
             marioPhysics.SetPosition(mario, world);
         }
-        else {
-            mario.ResetTime();
-        }
+
         gameEngine(window, background, world, mario, marioPhysics);
 
         window.display();

@@ -40,12 +40,24 @@ World::~World() {
     std::cout<<"Destryoing the WORLD HA HA HA HA HA"<<std::endl;
 }
 
-std::vector<GameObject> World::GetGameObjects() {
+std::vector<GameObject>& World::GetGameObjects() {
     return list_of_objects_;
 }
 
-void World::setMap() {
-    
+void World::setObjLocations(int x) {
+    for(int i = 0; i< list_of_objects_.size(); i++) {
+        list_of_objects_[i].SetRelativeLocation(x);
+    }
 }
+
+
+
+
+
+
+
+
+
+
 
 

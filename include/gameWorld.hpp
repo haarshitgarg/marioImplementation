@@ -8,22 +8,13 @@ class World {
         World();
         ~World();
 
-        std::vector<GameObject> GetGameObjects();
+        std::vector<GameObject>& GetGameObjects();
 
-        void SetXVelocity(int x);
-        void SetYVelocity(int y);
-        void SetVelocity(Velocity2D vel);
+        void setObjLocations(int x);
 
-        double DeltaTime();
- 
     private:
         std::vector<GameObject> list_of_objects_;
-        int current_obj_index;
 
-
-        std::chrono::time_point<std::chrono::high_resolution_clock> current_time_;
-
-        void setMap();
 };
 
 #endif

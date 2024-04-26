@@ -21,19 +21,18 @@ class MarioPhysics {
         MarioPhysics();
         ~MarioPhysics();
 
-        void UpdateMatrix();
-
         void SetPosition(MarioObject& mario, World& world);
 
         cv::Mat PrintMatrix();
     private:
         Matrix matrix;
-        World world;
         int max_ds = 0;
 
-        void UpdateLocation(MarioObject& mario, location& loc, Velocity2D& vel);
+        void UpdateLocation(MarioObject& mario, World& world, location& loc, Velocity2D& vel);
 
         void CheckFrameBounds(MarioObject& mario, location& loc);
+
+        void UpdateMatrix(World& world);
 };
 
 #endif

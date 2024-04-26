@@ -20,12 +20,12 @@ MarioPhysics::MarioPhysics() {
         matrix.push_back(temp);
     }
 
+    World world;
     std::vector<GameObject> list_of_objects = world.GetGameObjects();
     for(int i = 0; i<list_of_objects.size(); i++) {
         if(list_of_objects[i].GetLocation().x <WINDOW_X) {
 
             GameObject object = list_of_objects[i];
-            std::cout<<"k: "<<object.GetLocation().x<<std::endl;
             for(int k = object.GetLocation().x; k<std::min(WINDOW_X, object.GetLocation().x + object.GetObjectSize().length); k++) {
                 for(int l = object.GetLocation().y; l< std::min(WINDOW_Y, object.GetLocation().y + object.GetObjectSize().breadth); l++) {
                     matrix[k][l] = 1;
@@ -37,6 +37,32 @@ MarioPhysics::MarioPhysics() {
 
 MarioPhysics::~MarioPhysics() {
     std::cout<<"Ending the Physics"<<std::endl;
+}
+
+void MarioPhysics::UpdateMatrix(World& world) {
+
+    // Initialising the matrix to zero
+    for(int i = 0; i<WINDOW_X; i++) {
+        for(int j = 0; j<WINDOW_Y; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+
+    std::vector<GameObject> list_of_objects = world.GetGameObjects();
+    for(int i = 0; i<list_of_objects.size(); i++) {
+        if(list_of_objects[i].GetLocation().x <WINDOW_X) {
+            GameObject object = list_of_objects[i];
+            int h = object.GetLocation().x;
+            int j = object.GetLocation().y;
+            h = std::max(h, 0);
+            j = std::max(j, 0);
+            for(int k = h; k<std::min(WINDOW_X, object.GetLocation().x + object.GetObjectSize().length); k++) {
+                for(int l = j; l< std::min(WINDOW_Y, object.GetLocation().y + object.GetObjectSize().breadth); l++) {
+                    matrix[k][l] = 1;
+                }
+            }
+        }
+    }
 }
 
 cv::Mat MarioPhysics::PrintMatrix() { 
@@ -69,12 +95,19 @@ void MarioPhysics::SetPosition(MarioObject& mario, World& world) {
         int dy = vel.y*dt;
         mario_loc.y += dy;
         mario_loc.x += dx;
+
+        if(mario_loc.x > 400) {
+            world.setObjLocations(400-mario_loc.x);
+            UpdateMatrix(world);
+            mario_loc.x = 400;
+        }
+
         CheckFrameBounds(mario, mario_loc);
-        UpdateLocation(mario, mario_loc, vel);
+        UpdateLocation(mario, world, mario_loc, vel);
     }
 }
 
-void MarioPhysics::UpdateLocation(MarioObject& mario, location& loc, Velocity2D& vel) {
+void MarioPhysics::UpdateLocation(MarioObject& mario, World& world, location& loc, Velocity2D& vel) {
     std::vector<location> corners(4);
     corners[0].x = loc.x + 30;
     corners[0].y = loc.y + 30;
