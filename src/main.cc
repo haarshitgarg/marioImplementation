@@ -101,6 +101,7 @@ int main() {
                 }
                 else if(event.key.code == sf::Keyboard::A) {
                     background.setXVelocity(0);
+                    mario.SetXVelocity(0);
                 }
             }
 

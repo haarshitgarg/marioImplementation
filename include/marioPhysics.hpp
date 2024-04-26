@@ -22,7 +22,6 @@ class MarioPhysics {
         ~MarioPhysics();
 
         void UpdateMatrix();
-        void HandleActions(MarioObject& mario, Actions action);
 
         void SetPosition(MarioObject& mario, World& world);
 
@@ -33,6 +32,8 @@ class MarioPhysics {
         int max_ds = 0;
 
         void UpdateLocation(MarioObject& mario, location& loc, Velocity2D& vel);
+
+        void CheckFrameBounds(MarioObject& mario, location& loc);
 };
 
 #endif

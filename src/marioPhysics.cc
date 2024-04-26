@@ -37,23 +37,7 @@ MarioPhysics::MarioPhysics() {
 
 MarioPhysics::~MarioPhysics() {
     std::cout<<"Ending the Physics"<<std::endl;
-
 }
-
-void MarioPhysics::HandleActions(MarioObject& mario, Actions action) {
-    switch (action) {
-        case Actions::UP :
-            {
-                mario.SetYVelocity(-500);
-            }
-        default:
-            {
-
-            }
-    
-    }
-}
-
 
 cv::Mat MarioPhysics::PrintMatrix() { 
     cv::Mat image(WINDOW_Y, WINDOW_X, CV_8UC1);
@@ -79,14 +63,14 @@ void MarioPhysics::SetPosition(MarioObject& mario, World& world) {
         mario.ResetTime();
         dt = dt/1000;
         vel.y += gravityAccel*dt;
-        location loc = mario.GetLocation();
+        location mario_loc = mario.GetLocation();
 
         int dx = vel.x*dt;
         int dy = vel.y*dt;
-        loc.y += dy;
-        loc.x += dx;
-
-        UpdateLocation(mario, loc, vel);
+        mario_loc.y += dy;
+        mario_loc.x += dx;
+        CheckFrameBounds(mario, mario_loc);
+        UpdateLocation(mario, mario_loc, vel);
     }
 }
 
@@ -184,6 +168,24 @@ void MarioPhysics::UpdateLocation(MarioObject& mario, location& loc, Velocity2D&
     mario.SetVelocity(vel);
 }
 
+void MarioPhysics::CheckFrameBounds(MarioObject& mario, location& mario_loc) {
+    if(mario_loc.x<0) {
+        mario_loc.x = 0;
+        mario.SetLocation(mario_loc);
+    }
+    if(mario_loc.y < 0) {
+        mario_loc.y = 0;
+        mario.SetLocation(mario_loc);
+    }
+    if(mario_loc.x > WINDOW_X - MARIO_LENGTH) {
+        mario_loc.x = WINDOW_X - MARIO_LENGTH;
+        mario.SetLocation(mario_loc);
+    }
+    if(mario_loc.y > WINDOW_Y - MARIO_BREADTH) {
+        mario_loc.y = WINDOW_Y - MARIO_BREADTH;
+        mario.SetLocation(mario_loc);
+    }
+}
 
 
 
