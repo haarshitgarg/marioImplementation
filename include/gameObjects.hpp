@@ -1,3 +1,6 @@
+#ifndef GAME_OBJECTS_HPP
+#define GAME_OBJECTS_HPP
+
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "commonObjects.hpp"
@@ -7,12 +10,16 @@ class GameObject {
     public:
         GameObject(location loc, std::string textureName, ObjectSize size);
         ~GameObject();
-        location GetLocation();
-        void SetRelativeLocation();
-        sf::Sprite GetSprite(location windoLocation);
+
+        location GetLocation() const;
+        void SetRelativeLocation(int x);
+
+        sf::Sprite GetSprite() const;
+        ObjectSize GetObjectSize() const;
 
     private:
         location loc_;
+
         std::string textureName_;
         ObjectSize size_;
         sf::Texture texture_;
@@ -20,3 +27,5 @@ class GameObject {
 
         void loadTexture();
 };
+
+#endif
